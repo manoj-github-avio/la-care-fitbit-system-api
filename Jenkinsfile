@@ -3,17 +3,17 @@ pipeline {
   stages {
     stage('MUnit Test') { 
       steps {
-        sh 'clean test'
+        sh 'mvn clean test'
       }
     }
     stage('Mule project Build') { 
       steps {
-        sh 'clean install'
+        sh 'mvn clean install'
       }
     }
     stage('Deploy CloudHub') { 
       steps {
-        sh 'clean deploy -DmuleDeploy'
+        sh 'mvn clean deploy -DmuleDeploy'
       }
     }
   }
