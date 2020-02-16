@@ -1,37 +1,95 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-	<modelVersion>4.0.0</modelVersion>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
 
-	<groupId>com.mycompany</groupId>
-	<artifactId>la-care-fitbit-system-api</artifactId>
+    <groupId>com.mycompany</groupId>
+    <artifactId>la-care-fitbit-system-api</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <packaging>mule-application</packaging>
-
-	<name>la-care-fitbit-system-api</name>
-
+    <name>la-care-fitbit-system-api</name>
     <properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <app.runtime>4.2.2</app.runtime>
+        <mule.maven.plugin.version>3.3.5</mule.maven.plugin.version>
+    </properties>
+    <!-- <profiles>
+    <profile>
+        <id>DEV</id>
+        <activation>
+            <activeByDefault>true</activeByDefault>
+            <property>
+                <name>env</name>
+                <value>DEV</value>
+            </property>
+        </activation>
+        <properties>
+            <ch.environment>DEV</ch.environment>
+            <ch.mule.env>DEV</ch.mule.env>
+            <ch.applicationName>${artifactId}-dev</ch.applicationName>
+            <ch.workers>1</ch.workers>
+            <ch.workerType>Small</ch.workerType>
+            <ch.anypoint.platform.analytics_base_uri>https://analytics-ingest.anypoint.mulesoft.com/</ch.anypoint.platform.analytics_base_uri>
+            <ch.anypoint.platform.client_secret>b816e817676C45d28cb65021eA147AD7</ch.anypoint.platform.client_secret>
+            <ch.anypoint.platform.platform_base_uri>https://anypoint.mulesoft.com/apiplatform</ch.anypoint.platform.platform_base_uri>
+            <ch.anypoint.platform.client_id>0bf365db58a44ab1ae6ebadc5840b18b</ch.anypoint.platform.client_id>
+            <ch.anypoint.platform.coreservice_base_uri>https://anypoint.mulesoft.com/accounts</ch.anypoint.platform.coreservice_base_uri>
+            <ch.anypoint.platform.contracts_base_uri>https://anypoint.mulesoft.com/apigateway/ccs</ch.anypoint.platform.contracts_base_uri>
+        </properties>
+        </profile>
+    </profiles>  -->
 
-		<app.runtime>4.2.2</app.runtime>
-		<mule.maven.plugin.version>3.3.5</mule.maven.plugin.version>
-	</properties>
-
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.mule.tools.maven</groupId>
-				<artifactId>mule-maven-plugin</artifactId>
-				<version>${mule.maven.plugin.version}</version>
-				<extensions>true</extensions>
-				<configuration>
-				<classifier>mule-application</classifier>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.mule.tools.maven</groupId>
+                <artifactId>mule-maven-plugin</artifactId>
+                <version>${mule.maven.plugin.version}</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <cloudHubDeployment>
+                        <uri>https://anypoint.mulesoft.com</uri>
+                        <muleVersion>${app.runtime}</muleVersion>
+                        <username>manoj_amballa</username>
+                        <password>Dallas@1290</password>
+                        <applicationName>${artifactId}-dev</applicationName>
+                        <environment>DEV</environment>
+                        <businessGroup>AVIO Sandbox</businessGroup>
+                        <businessGroupId>f2ea2cb4-c600-4bb5-88e8-e952ff5591ee</businessGroupId>
+                        <workers>1</workers>
+                        <workerType>SMALL</workerType>
+                    <!--    <properties>
+                            <key>value</key>
+                        </properties>   -->
+                    </cloudHubDeployment>
                 </configuration>
-			</plugin>
-		</plugins>
-	</build>
+        <!--        <executions>
+                    <execution>
+                        <id>deploy</id>
+                        <phase>deploy</phase>
+                        <goals>
+                            <goal>deploy</goal>
+                        </goals>
+                    </execution>
+                </executions>  -->
+            </plugin>
+    <!--        <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-deploy-plugin</artifactId>
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
+            </plugin>
+             <plugin> 
+                <groupId>org.apache.maven.plugins</groupId> 
+                <artifactId>maven-install-plugin</artifactId> 
+                <version>2.5.2</version> 
+            </plugin>  -->
+        </plugins>
+    </build>
 
-	<dependencies>
+    <dependencies>
         <dependency>
             <groupId>org.mule.connectors</groupId>
             <artifactId>mule-http-connector</artifactId>
@@ -44,13 +102,13 @@
             <version>1.1.5</version>
             <classifier>mule-plugin</classifier>
         </dependency>
-		<dependency>
+        <dependency>
             <groupId>org.mule.modules</groupId>
             <artifactId>mule-apikit-module</artifactId>
             <version>1.3.7</version>
             <classifier>mule-plugin</classifier>
         </dependency>
-    	<dependency>
+        <dependency>
             <groupId>org.mule.modules</groupId>
             <artifactId>mule-oauth-module</artifactId>
             <version>1.1.11</version>
@@ -58,8 +116,8 @@
         </dependency>
     </dependencies>
 
-	<repositories>
-          <repository>
+    <repositories>
+        <repository>
             <id>anypoint-exchange-v2</id>
             <name>Anypoint Exchange</name>
             <url>https://maven.anypoint.mulesoft.com/api/v2/maven</url>
@@ -81,6 +139,10 @@
             <snapshots>
                 <enabled>false</enabled>
             </snapshots>
+        </pluginRepository>
+        <pluginRepository>
+                <id>mule-public</id>
+                <url>https://repository.mulesoft.org/nexus/content/repositories/releases</url>
         </pluginRepository>
     </pluginRepositories>
 
