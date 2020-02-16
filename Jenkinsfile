@@ -1,14 +1,14 @@
 pipeline {
   agent any
   stages {
-    stage('MUnit Test') { 
-      steps {
-        sh 'mvn clean test'
-      }
-    }
     stage('Mule project Build') { 
       steps {
         sh 'mvn clean install'
+      }
+    }
+    stage('MUnit Test') { 
+      steps {
+        sh 'mvn test'
       }
     }
     stage('Deploy CloudHub') { 
