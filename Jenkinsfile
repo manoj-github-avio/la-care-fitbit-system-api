@@ -6,7 +6,7 @@ pipeline {
         sh 'mvn clean test'
       }
     }
-    stage('MUnit Test') { 
+    stage('Mule project Build') { 
       steps {
         sh 'mvn clean install'
       }
