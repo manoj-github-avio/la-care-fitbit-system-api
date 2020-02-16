@@ -1,0 +1,43 @@
+#%RAML 1.0
+title: LA Care Fitbit System API
+baseUri: http://localhost:8081/
+description: "This is a System API to connect to Fitbit and give back the details for User, Device Profiles and Vitals Info"
+version: v1
+  
+/userProfile:
+  get:
+    description: "Method will return all User profiles for an account"
+    responses:
+      200:
+        body:
+          application/json:
+            examples:
+              output: !include examples/user_profile/userProfileResponse.json
+
+/deviceProfile:
+  description: "Methods provided to retrieve, update and remove songs from the registry"
+  get:
+    responses:
+      200:
+        body:
+          application/json:
+            examples:
+              output: !include examples/device_profile/deviceProfileResponse.json
+/vitals:
+  description: "Methods provided to retrieve, update and remove artists from the registry"
+  get:
+    queryParameters:
+      date:
+        required: true
+        type: string
+        example: "2020-01-20"
+      period:
+        required: true
+        type: string
+        example: "1d, 7d, 30d, 1w, and 1m"
+    responses:
+      200:
+        body:
+          application/json:
+            examples:
+              output: !include examples/vitals/vitalsHeartRateResponse.json

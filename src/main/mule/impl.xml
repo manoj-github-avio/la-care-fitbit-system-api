@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:oauth="http://www.mulesoft.org/schema/mule/oauth" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/oauth http://www.mulesoft.org/schema/mule/oauth/current/mule-oauth.xsd">
+	
+	<sub-flow name="getUserProfileFlow" doc:id="58af7503-fe85-45ca-ad83-d6fb8d57ada9" >
+		<logger level="INFO" doc:name="INFO start" doc:id="0216c6e1-1bb7-4181-b5ff-a52d0d3434a0" message="Request Initiated"/>
+		<http:request method="GET" doc:name="Fitbit" doc:id="fcffe883-0bb9-4dc2-ada2-05b9fc5d2329" config-ref="Fitbit_requestor" path="${fitbit.user.path}" outputMimeType="application/json">
+			<http:headers ><![CDATA[#[output application/java
+---
+{
+	Authorization : p('fitbit.auth.token'),
+	"Host" : p('fitbit.host')
+}]]]></http:headers>
+		</http:request>
+		<logger level="INFO" doc:name="INFO end" doc:id="8a62b34c-a7da-4714-a02a-a13969628793" message="#[output application/json --- payload]"/>
+	</sub-flow>
+	
+	<sub-flow name="getDevicesFlow" doc:id="11a1c6de-88df-4dce-bf45-425c700f1fe3" >
+		<logger level="INFO" doc:name="INFO start" doc:id="e79c5aae-8359-47ff-ba35-b4a9376cbd37" message="Request Initiated"/>
+		<http:request method="GET" doc:name="Fitbit" doc:id="d734de3a-7fd5-4ebc-aa33-8a009c1977da" config-ref="Fitbit_requestor" path="${fitbit.device.path}" outputMimeType="application/json">
+			<http:headers ><![CDATA[#[output application/java
+---
+{
+	Authorization : p('fitbit.auth.token'),
+	"Host" : p('fitbit.host')
+}]]]></http:headers>
+		</http:request>
+		<ee:transform doc:name="Transform Message" doc:id="849b6734-c0b6-421d-81f7-554c4b19c746" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+[
+  {
+    battery: "High",
+    deviceVersion: "Charge HR",
+    id: "27072629",
+    lastSyncTime: "2015-07-27T17:01:39.313",
+    "type": "TRACKER"
+  }, 
+  {
+    battery: "Empty",
+    deviceVersion: "MobileTrack",
+    id: "29559794",
+    lastSyncTime: "2015-07-19T16:57:59.000",
+    "type": "TRACKER"
+  }, 
+  {
+    battery: "High",
+    deviceVersion: "Aria",
+    id: "Y1PFEJZGGX8QFYTV",
+    lastSyncTime: "2015-07-27T07:14:34.000",
+    "type": "SCALE"
+  }
+]]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="INFO end" doc:id="cfe86827-4fb5-4309-9650-f236a5ceff4a" message="#[output application/json --- payload]"/>
+	</sub-flow>
+	
+	<sub-flow name="getVitalsFlow" doc:id="f186359c-321d-4b1b-bf4c-20fff0c8d796" >
+		<logger level="INFO" doc:name="INFO start" doc:id="f1c3a3bc-a7b5-4fe9-8682-e257c77060b7" message="Request Initiated"/>
+		<ee:transform doc:name="vars" doc:id="5dc19f79-c534-4806-9179-8188b12bb54d" >
+			<ee:message >
+			</ee:message>
+			<ee:variables >
+				<ee:set-variable variableName="inputs" ><![CDATA[%dw 2.0
+output application/java
+---
+{
+	date: attributes.queryParams.date,
+	period: attributes.queryParams.period
+}]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<http:request method="GET" doc:name="Fitbit" doc:id="f176f59f-3c1c-470c-a418-b779ef7d40e5" config-ref="Fitbit_requestor" path="${fitbit.vitals.path}" outputMimeType="application/json">
+			<http:headers ><![CDATA[#[output application/java
+---
+{
+	Authorization : p('fitbit.auth.token'),
+	"Host" : p('fitbit.host')
+}]]]></http:headers>
+			<http:uri-params ><![CDATA[#[output application/java
+---
+{
+	"date" : vars.inputs.date,
+	"period" : vars.inputs.period
+}]]]></http:uri-params>
+		</http:request>
+		<logger level="INFO" doc:name="INFO end" doc:id="3fe5203f-d619-4a16-ab58-4973116074bd" message="#[output application/json --- payload]"/>
+	</sub-flow>
+</mule>
