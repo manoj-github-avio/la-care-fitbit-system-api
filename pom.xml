@@ -64,7 +64,7 @@
                         </properties>   -->
                     </cloudHubDeployment>
                 </configuration>
-                <executions>
+        <!--        <executions>
                     <execution>
                         <id>deploy</id>
                         <phase>deploy</phase>
@@ -72,7 +72,7 @@
                             <goal>deploy</goal>
                         </goals>
                     </execution>
-                </executions>  
+                </executions>  -->
             </plugin>
     <!--        <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
